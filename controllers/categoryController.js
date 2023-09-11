@@ -1,4 +1,5 @@
 const Category = require("../models/category");
+const Item = require("../models/item");
 const asyncHandler = require("express-async-handler");
 
 // Display list of all category.
@@ -11,7 +12,23 @@ res.render("category_list", {title: "Category List", category_list: allCategorie
 });
 // Display detail page for a specific category.
 exports.category_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: category detail: ${req.params.id}`);
+  // Get details of genre and all associated books (in parallel)
+  const [category, itemsInCategories] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Item.find({ category: req.params.id }, "name description").exec(),
+  ]);
+  if (category === null) {
+    // No results.
+    const err = new Error("Genre not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("category_detail", {
+    title: "Category Detail",
+    category: category,
+    category_items: itemsInCategories,
+  });
 });
 
 // Display category create form on GET.
