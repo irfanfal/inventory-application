@@ -7,7 +7,7 @@ var logger = require('morgan');
 // Set up mongoose connection
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb+srv://admin:admin@cluster0.1slf6v0.mongodb.net/?retryWrites=true&w=majority";
+const mongoDB = "mongodb+srv://admin:admin@cluster0.1slf6v0.mongodb.net/inventory?retryWrites=true&w=majority";
 
 main().catch((err) => console.log(err));
 async function main() {
